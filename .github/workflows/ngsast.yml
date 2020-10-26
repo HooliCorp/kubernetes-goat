@@ -20,7 +20,11 @@ jobs:
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
     - name: NextGen Static Analysis
-      run: ${GITHUB_WORKSPACE}/sl analyze --wait --app kubernetes-goat --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --kubernetes .
+      run: |
+        wget https://github.com/ShiftLeftSecurity/sast-scan/suites/1399526580/artifacts/23240646 -O /usr/local/bin/scan
+        chmod +x /usr/local/bin/scan
+        scan -t kubernetes
+        ${GITHUB_WORKSPACE}/sl analyze --wait --app kubernetes-goat --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --kubernetes .
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
   Build-Rules: 
