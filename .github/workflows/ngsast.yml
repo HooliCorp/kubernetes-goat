@@ -21,9 +21,6 @@ jobs:
       id: extract_branch
     - name: NextGen Static Analysis
       run: |
-        wget https://github.com/ShiftLeftSecurity/sast-scan/suites/1399526580/artifacts/23240646 -O ${GITHUB_WORKSPACE}/scan
-        chmod +x ${GITHUB_WORKSPACE}/scan
-        ${GITHUB_WORKSPACE}/scan -t kubernetes
         ${GITHUB_WORKSPACE}/sl analyze --wait --app kubernetes-goat --tag branch=${{ github.head_ref || steps.extract_branch.outputs.branch }} --kubernetes .
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
